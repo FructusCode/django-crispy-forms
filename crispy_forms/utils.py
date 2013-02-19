@@ -7,7 +7,7 @@ from django.forms.forms import BoundField
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.html import conditional_escape
-from django.utils.functional import memoize
+from django.utils.functional import memoize, SimpleLazyObject
 
 # Global field template, default template used for rendering a field.
 
@@ -16,7 +16,7 @@ TEMPLATE_PACK = getattr(settings, 'CRISPY_TEMPLATE_PACK', 'bootstrap')
 # By memoizeing we avoid loading the template every time render_field
 # is called without a template
 def default_field_template(template_pack=TEMPLATE_PACK):
-    return get_template("%s/field.html" % template_pack)
+    return SimpleLazyObject(lambda: get_template("%s/field.html" % template_pack))
 default_field_template = memoize(default_field_template, {}, 1)
 
 
